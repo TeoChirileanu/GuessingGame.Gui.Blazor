@@ -1,9 +1,35 @@
 ﻿@page "/game"
+@inject INumberChecker NumberChecker
 
 <h1>Wanna play a game?</h1>
 
+<div>
+    <label for="@NumberAsString">Enter your number below:</label>
+    <input id="MyInput" bind="@NumberAsString" placeholder="Good Luck!"/>
+</div>
+
+<div>
+    <button onclick="@(() => CheckNumber())">Check</button>
+    @if (!string.IsNullOrWhiteSpace(Message)) {
+        <b>@Message</b>
+    }
+</div>
+
 @functions {
 
-    INumberChecker numberChecker = new NumberChecker();
+    string NumberAsString { get; set; }
+
+    string Message { get; set; }
+
+    async Task CheckNumber() {
+        int? number = NumberAsString.GetIntValue();
+        if (!number.HasValue) Message = "Invalid Number! Please try again.";
+        if (number.Value < Resources.LowerBound || number.Value > Resources.UpperBound) {
+            Message = Resources.NumberOutOfBoundsMessage;
+            return;
+        }
+        
+        Message = await NumberChecker.CheckNumber(number.Value).ConfigureAwait(false);
+    }
 
 }
