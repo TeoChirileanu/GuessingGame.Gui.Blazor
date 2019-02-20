@@ -23,7 +23,7 @@
 
     async Task CheckNumber() {
         int? number = NumberAsString.GetIntValue();
-        if (!number.HasValue) Message = "Invalid Number! Please try again.";
+        if (!number.HasValue) Message = Resources.InvalidNumberMessage;
         if (number.Value < Resources.LowerBound || number.Value > Resources.UpperBound) {
             Message = Resources.NumberOutOfBoundsMessage;
             return;
